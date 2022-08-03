@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask import session as login_session
 import pyrebase
-
+import random
 app = Flask(__name__, template_folder='templates', static_folder='static')
 app.config['SECRET_KEY'] = 'super-secret-key'
 
@@ -63,31 +63,31 @@ def add_video():
 		title=request.form['title']
 		description=request.form['description']
 		try:
-			video = {"title":title,"description":description,"uid":login_session['user']['localId'],"videoLink":videoLink,"username":db.child('Users').child(login_session['user']['localId']).child("username").get().val()}
+			video = {"title":title,"description":description,"uid":login_session['user']['localId'],"videoLink":videoLink,"username":db.child('Users').child(login_session['user']['localId']).get().val()["username"]}
 			db.child('Videos').push(video)
-			return redirect(url_for("all_tweets"))
+			return redirect(url_for("home"))
 		except:
 			print("adding error")
 	return render_template("add_video.html")
 
 @app.route("/home")
 def home():
-	videos=db.child('Videos').get().val()
-	users=db.child('users').get().val()
-	return render_template("home.html",videos=videos,users=users)
+	videos=db.child("Videos").get().val()
+	video_id=random.choice(list(db.child('Videos').get().val().keys()))
+	return render_template("home.html",video=videos[video_id])
 
-@app.route("/search",methods=['GET', 'POST'])
-def search():
-	videos=db.child('Videos').get().val()
-	users=db.child('users').get().val()
-	if request.method=="POST":
-		videos_list=""
-		search=request.form['search']
-		for i in videos:
-			if search==videos[i]["title"] or search in videos[i]["description"] or search==videos[i]["videoLink"] or search==videos[i]["username"]:
-				videos_list.append(videos[i])
-		return render_template("search.html",videos=videos,users=users,videos_list=videos_list)
-	return render_template("search.html",videos=videos,users=users)
+# @app.route("/search",methods=['GET', 'POST'])
+# def search():
+# 	videos=db.child('Videos').get().val()
+# 	users=db.child('users').get().val()
+# 	if request.method=="POST":
+# 		videos_list=""
+# 		search=request.form['search']
+# 		for i in videos:
+# 			if search==videos[i]["title"] or search in videos[i]["description"] or search==videos[i]["videoLink"] or search==videos[i]["username"]:
+# 				videos_list.append(videos[i])
+# 		return render_template("search.html",videos=videos,users=users,videos_list=videos_list)
+# 	return render_template("search.html",videos=videos,users=users)
 
 @app.route("/profile")
 def profile():
