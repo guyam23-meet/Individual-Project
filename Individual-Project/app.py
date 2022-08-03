@@ -76,7 +76,7 @@ def home():
 	users=db.child('users').get().val()
 	return render_template("home.html",videos=videos,users=users)
 
-@app.route("/search")
+@app.route("/search",methods=['GET', 'POST'])
 def search():
 	videos=db.child('Videos').get().val()
 	users=db.child('users').get().val()
@@ -95,18 +95,18 @@ def profile():
 	videos=db.child("videos").get().val()
 	return render_template("profile.html",videos=videos,users=users)
 
-@app.route("/profile/settings")
+@app.route("/profile/settings",methods=['GET', 'POST'])
 def profile_settings():
-	user=login_session['user']["localId"]
+	user=db.child("Users").child(login_session['user']['localId']).get().val()
 	if request.method=="POST":
-		changed={'email':"",'password':"",'username':""}
+		changed={'password':"",'username':""}
 		for i in changed:
 			if request.form[i]!=changed[i]:
 				update={i:request.form[i]}
-				db.child("Users").child(user).update(update)
-				user[i]=request.form[i]
-				return render_template("profile_settings.html",user=user)
-	return render_template("profile_settings.html",user=user)
+				db.child("Users").child(login_session['user']['localId']).update(update)
+				login_session['user'][i]=request.form[i]
+		return redirect(url_for('profile'))
+	return render_template("profile_settings.html",username=user['username'],password=user['password'])
 
 
 #Code goes above here
