@@ -11,16 +11,16 @@
 
 body {
   margin: 0;
+  background-color: black;
   font-family: Arial;
   font-size: 17px;
 }
 
 #myVideo {
-  position: fixed;
-  right: 0;
-  margin-top: 0;
-  min-width: 100%; 
-  min-height: 100%;
+  display: block; 
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
 }
 
 .content {
@@ -30,6 +30,7 @@ body {
   color: #f1f1f1;
   width: 100%;
   padding: 20px;
+  text-shadow: 2px 1px black;
 }
 
 #myBtn {
@@ -38,7 +39,7 @@ body {
   font-size: 18px;
   padding: 10px;
   border: none;
-  background: #000;
+  background:   rgba(0, 128, 255,0.5);
   color: #fff;
   cursor: pointer;
 }
@@ -59,8 +60,11 @@ body {
     <div class="collapse navbar-collapse" id="navbarSupportedContent" style="background-color:blue;border-radius:7px;">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <!-- Profile -->
-        <li class="nav-item">
+<!--         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="/profile"><i class="fa-solid fa-user"></i></a>
+        </li> -->
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/profile/settings"><i class="fa-solid fa-user-gear"></i></a>
         </li>
         <!-- Home Page -->
         <li class="nav-item">
@@ -71,18 +75,18 @@ body {
           <a class="nav-link active" aria-current="page" href="/search"><i class="fa-solid fa-magnifying-glass"></i></a>
         </li> -->
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="/add_video"><i class="fa-solid fa-video"></i></a>
+          <a class="nav-link active" aria-current="page" href="/add_video"><i class="fa-solid fa-camera"></i></i></a>
         </li>
       </ul>
     </div>
   </div>
 </nav>
 <!--navigation bar end-->
-<iframe src="{{video['videoLink']}}" autoplay muted loop id="myVideo">
-</iframe>
-
+<!-- <iframe src="{{video['videoLink']}}" autoplay muted loop id="myVideo">
+</iframe> -->
+<img src="{{video['videoLink']}}" id="myVideo">
 <div class="content">
-  <h6>{{video["username"]}}</h6>
+  <h6>by the user: {{video["username"]}}</h6>
   <h1>{{video["title"]}}</h1>
   <p>{{video["description"]}}</p>
   <a href="/home"><button id="myBtn">Next</button></a>
